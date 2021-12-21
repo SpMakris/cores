@@ -905,7 +905,10 @@ void _reboot_Teensyduino_(void)
 	__builtin_unreachable();
 }
 
-
+void usbMIDI_attach_interrupt(void (*fptr)())
+{
+	usbMIDI_isr = fptr;
+}
 
 void usb_isr(void)
 {
@@ -1162,7 +1165,10 @@ void usb_isr(void)
 		//serial_print("sleep\n");
 		USB0_ISTAT = USB_ISTAT_SLEEP;
 	}
-
+	if (usbMIDI_isr)
+	{
+		(*usbMIDI_isr)();
+	}
 }
 
 
